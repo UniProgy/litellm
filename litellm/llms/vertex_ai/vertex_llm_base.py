@@ -288,6 +288,7 @@ class VertexBase:
         stream: Optional[bool],
         auth_header: Optional[str],
         url: str,
+        model: str,
     ) -> Tuple[Optional[str], str]:
         """
         for cloudflare ai gateway - https://github.com/BerriAI/litellm/issues/4317
@@ -297,7 +298,7 @@ class VertexBase:
         """
         if api_base:
             if custom_llm_provider == "gemini":
-                url = "{}:{}".format(api_base, endpoint)
+                url = "{}/v1beta/models/{}:{}".format(api_base, model, endpoint)
                 if gemini_api_key is None:
                     raise ValueError(
                         "Missing gemini_api_key, please set `GEMINI_API_KEY`"
@@ -369,6 +370,7 @@ class VertexBase:
             endpoint=endpoint,
             stream=stream,
             url=url,
+            model=model,
         )
 
     def get_access_token(

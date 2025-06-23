@@ -1033,7 +1033,7 @@ def exception_type(  # type: ignore  # noqa: PLR0915
                 if "Unable to locate credentials" in error_str:
                     exception_mapping_worked = True
                     raise BadRequestError(
-                        message=f"litellm.BadRequestError: SagemakerException - {error_str}",
+                        message=f"SagemakerException - {error_str}",
                         model=model,
                         llm_provider="sagemaker",
                         response=getattr(original_exception, "response", None),
@@ -1156,7 +1156,7 @@ def exception_type(  # type: ignore  # noqa: PLR0915
                 ):
                     exception_mapping_worked = True
                     raise BadRequestError(
-                        message=f"litellm.BadRequestError: VertexAIException - {error_str}",
+                        message=f"VertexAIException - {error_str}",
                         model=model,
                         llm_provider="vertex_ai",
                         response=httpx.Response(

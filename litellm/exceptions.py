@@ -121,7 +121,7 @@ class BadRequestError(openai.BadRequestError):  # type: ignore
         body: Optional[dict] = None,
     ):
         self.status_code = 400
-        self.message = "litellm.BadRequestError: {}".format(message)
+        self.message = message
         self.model = model
         self.llm_provider = llm_provider
         self.litellm_debug_info = litellm_debug_info

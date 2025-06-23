@@ -2506,6 +2506,9 @@ def completion(  # type: ignore # noqa: PLR0915
 
             api_base = api_base or litellm.api_base or get_secret("GEMINI_API_BASE")
 
+            new_headers = extra_headers or {}
+            new_headers.update(headers)
+
             new_params = deepcopy(optional_params)
             response = vertex_chat_completion.completion(  # type: ignore
                 model=model,
@@ -2526,7 +2529,7 @@ def completion(  # type: ignore # noqa: PLR0915
                 custom_llm_provider=custom_llm_provider,
                 client=client,
                 api_base=api_base,
-                extra_headers=extra_headers,
+                extra_headers=new_headers,
             )
 
         elif custom_llm_provider == "vertex_ai":
