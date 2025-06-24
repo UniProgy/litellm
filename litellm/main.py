@@ -584,7 +584,7 @@ def _handle_mock_potential_exceptions(
             model=model,  # type: ignore
             request=httpx.Request(method="POST", url="https://api.openai.com/v1/"),
         )
-    elif isinstance(mock_response, str) and mock_response == "RateLimitErrror":
+    elif isinstance(mock_response, str) and mock_response == "RateLimitError":
         raise litellm.RateLimitError(
             message="this is a mock rate limit error",
             llm_provider=getattr(
@@ -594,7 +594,7 @@ def _handle_mock_potential_exceptions(
         )
     elif (
         isinstance(mock_response, str)
-        and mock_response == "ContextWindowExceededErrror"
+        and mock_response == "ContextWindowExceededError"
     ):
         raise litellm.ContextWindowExceededError(
             message="this is a mock context window exceeded error",
@@ -605,7 +605,7 @@ def _handle_mock_potential_exceptions(
         )
     elif (
         isinstance(mock_response, str)
-        and mock_response == "InternalServerErrror"
+        and mock_response == "InternalServerError"
     ):
         raise litellm.InternalServerError(
             message="this is a mock internal server error",

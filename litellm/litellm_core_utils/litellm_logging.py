@@ -798,7 +798,7 @@ class Logging(LiteLLMLoggingBaseClass):
                     )  # Expectation: any logger function passed in by the user should accept a dict object
                 except Exception as e:
                     verbose_logger.exception(
-                        "LoggingErrror: [Non-Blocking] Exception occurred while logging {}".format(
+                        "LoggingError: [Non-Blocking] Exception occurred while logging {}".format(
                             str(e)
                         )
                     )
@@ -866,7 +866,7 @@ class Logging(LiteLLMLoggingBaseClass):
                         capture_exception(e)
         except Exception as e:
             verbose_logger.exception(
-                "LoggingErrror: [Non-Blocking] Exception occurred while logging {}".format(
+                "LoggingError: [Non-Blocking] Exception occurred while logging {}".format(
                     str(e)
                 )
             )
@@ -985,7 +985,7 @@ class Logging(LiteLLMLoggingBaseClass):
                     )  # Expectation: any logger function passed in by the user should accept a dict object
                 except Exception as e:
                     verbose_logger.exception(
-                        "LoggingErrror: [Non-Blocking] Exception occurred while logging {}".format(
+                        "LoggingError: [Non-Blocking] Exception occurred while logging {}".format(
                             str(e)
                         )
                     )
@@ -1028,7 +1028,7 @@ class Logging(LiteLLMLoggingBaseClass):
                         )
                 except Exception as e:
                     verbose_logger.exception(
-                        "LoggingErrror: [Non-Blocking] Exception occurred while post-call logging with integrations {}".format(
+                        "LoggingError: [Non-Blocking] Exception occurred while post-call logging with integrations {}".format(
                             str(e)
                         )
                     )
@@ -1039,7 +1039,7 @@ class Logging(LiteLLMLoggingBaseClass):
                         capture_exception(e)
         except Exception as e:
             verbose_logger.exception(
-                "LoggingErrror: [Non-Blocking] Exception occurred while logging {}".format(
+                "LoggingError: [Non-Blocking] Exception occurred while logging {}".format(
                     str(e)
                 )
             )
@@ -1853,7 +1853,7 @@ class Logging(LiteLLMLoggingBaseClass):
 
                 except Exception as e:
                     print_verbose(
-                        f"LoggingErrror: [Non-Blocking] Exception occurred while success logging with integrations {traceback.format_exc()}"
+                        f"LoggingError: [Non-Blocking] Exception occurred while success logging with integrations {traceback.format_exc()}"
                     )
                     print_verbose(
                         f"LiteLLM.Logging: is sentry capture exception initialized {capture_exception}"
@@ -1862,7 +1862,7 @@ class Logging(LiteLLMLoggingBaseClass):
                         capture_exception(e)
         except Exception as e:
             verbose_logger.exception(
-                "LoggingErrror: [Non-Blocking] Exception occurred while success logging {}".format(
+                "LoggingError: [Non-Blocking] Exception occurred while success logging {}".format(
                     str(e)
                 ),
             )
@@ -2129,7 +2129,7 @@ class Logging(LiteLLMLoggingBaseClass):
                         )
             except Exception:
                 verbose_logger.error(
-                    f"LoggingErrror: [Non-Blocking] Exception occurred while success logging {traceback.format_exc()}"
+                    f"LoggingError: [Non-Blocking] Exception occurred while success logging {traceback.format_exc()}"
                 )
                 pass
 
@@ -2385,7 +2385,7 @@ class Logging(LiteLLMLoggingBaseClass):
 
                 except Exception as e:
                     print_verbose(
-                        f"LoggingErrror: [Non-Blocking] Exception occurred while failure logging with integrations {str(e)}"
+                        f"LoggingError: [Non-Blocking] Exception occurred while failure logging with integrations {str(e)}"
                     )
                     print_verbose(
                         f"LiteLLM.Logging: is sentry capture exception initialized {capture_exception}"
@@ -2394,7 +2394,7 @@ class Logging(LiteLLMLoggingBaseClass):
                         capture_exception(e)
         except Exception as e:
             verbose_logger.exception(
-                "LoggingErrror: [Non-Blocking] Exception occurred while failure logging {}".format(
+                "LoggingError: [Non-Blocking] Exception occurred while failure logging {}".format(
                     str(e)
                 )
             )
@@ -2447,7 +2447,7 @@ class Logging(LiteLLMLoggingBaseClass):
                     )
             except Exception as e:
                 verbose_logger.exception(
-                    "LoggingErrror: [Non-Blocking] Exception occurred while failure \
+                    "LoggingError: [Non-Blocking] Exception occurred while failure \
                         logging {}\nCallback={}".format(
                         str(e), callback
                     )

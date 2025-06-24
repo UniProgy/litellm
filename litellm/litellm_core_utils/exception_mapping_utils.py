@@ -756,7 +756,7 @@ def exception_type(  # type: ignore  # noqa: PLR0915
                 elif "token_quota_reached" in error_str:
                     exception_mapping_worked = True
                     raise RateLimitError(
-                        message=f"{custom_llm_provider}Exception: Rate Limit Errror - {error_str}",
+                        message=f"{custom_llm_provider}Exception: Rate Limit Error - {error_str}",
                         llm_provider=custom_llm_provider,
                         model=model,
                         response=getattr(original_exception, "response", None),
@@ -1181,7 +1181,7 @@ def exception_type(  # type: ignore  # noqa: PLR0915
                 ):
                     exception_mapping_worked = True
                     raise litellm.InternalServerError(
-                        message=f"InternalServerErrror: VertexAIException - {error_str}",
+                        message=f"InternalServerError: VertexAIException - {error_str}",
                         model=model,
                         llm_provider="vertex_ai",
                         response=httpx.Response(
@@ -1242,7 +1242,7 @@ def exception_type(  # type: ignore  # noqa: PLR0915
                 ):
                     exception_mapping_worked = True
                     raise RateLimitError(
-                        message=f"RateLimitErrror: VertexAIException - {error_str}",
+                        message=f"RateLimitError: VertexAIException - {error_str}",
                         model=model,
                         llm_provider="vertex_ai",
                         litellm_debug_info=extra_information,
@@ -1260,7 +1260,7 @@ def exception_type(  # type: ignore  # noqa: PLR0915
                 ):
                     exception_mapping_worked = True
                     raise litellm.InternalServerError(
-                        message=f"InternalServerErrror: VertexAIException - {error_str}",
+                        message=f"InternalServerError: VertexAIException - {error_str}",
                         model=model,
                         llm_provider="vertex_ai",
                         litellm_debug_info=extra_information,
@@ -1306,7 +1306,7 @@ def exception_type(  # type: ignore  # noqa: PLR0915
                     if original_exception.status_code == 429:
                         exception_mapping_worked = True
                         raise RateLimitError(
-                            message=f"RateLimitErrror: VertexAIException - {error_str}",
+                            message=f"RateLimitError: VertexAIException - {error_str}",
                             model=model,
                             llm_provider="vertex_ai",
                             litellm_debug_info=extra_information,
@@ -2003,7 +2003,7 @@ def exception_type(  # type: ignore  # noqa: PLR0915
                 ):
                     exception_mapping_worked = True
                     raise ContentPolicyViolationError(
-                        message=f"ContentPolicyViolationErrror: AzureException - {message}",
+                        message=f"ContentPolicyViolationError: AzureException - {message}",
                         llm_provider="azure",
                         model=model,
                         litellm_debug_info=extra_information,
@@ -2307,11 +2307,11 @@ def exception_logging(
                 )  # Expectation: any logger function passed in by the user should accept a dict object
             except Exception:
                 verbose_logger.debug(
-                    f"LoggingErrror: [Non-Blocking] Exception occurred while logging {traceback.format_exc()}"
+                    f"LoggingError: [Non-Blocking] Exception occurred while logging {traceback.format_exc()}"
                 )
     except Exception:
         verbose_logger.debug(
-            f"LoggingErrror: [Non-Blocking] Exception occurred while logging {traceback.format_exc()}"
+            f"LoggingError: [Non-Blocking] Exception occurred while logging {traceback.format_exc()}"
         )
         pass
 

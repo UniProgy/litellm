@@ -29,7 +29,7 @@ class AuthenticationError(openai.AuthenticationError):  # type: ignore
         num_retries: Optional[int] = None,
     ):
         self.status_code = 401
-        self.message = "AuthenticationErrror: {}".format(message)
+        self.message = "AuthenticationError: {}".format(message)
         self.llm_provider = llm_provider
         self.model = model
         self.litellm_debug_info = litellm_debug_info
@@ -75,7 +75,7 @@ class NotFoundError(openai.NotFoundError):  # type: ignore
         num_retries: Optional[int] = None,
     ):
         self.status_code = 404
-        self.message = "NotFoundErrror: {}".format(message)
+        self.message = "NotFoundError: {}".format(message)
         self.model = model
         self.llm_provider = llm_provider
         self.litellm_debug_info = litellm_debug_info
@@ -166,7 +166,7 @@ class UnprocessableEntityError(openai.UnprocessableEntityError):  # type: ignore
         num_retries: Optional[int] = None,
     ):
         self.status_code = 422
-        self.message = "UnprocessableEntityErrror: {}".format(message)
+        self.message = "UnprocessableEntityError: {}".format(message)
         self.model = model
         self.llm_provider = llm_provider
         self.litellm_debug_info = litellm_debug_info
@@ -251,7 +251,7 @@ class PermissionDeniedError(openai.PermissionDeniedError):  # type:ignore
         num_retries: Optional[int] = None,
     ):
         self.status_code = 403
-        self.message = "PermissionDeniedErrror: {}".format(message)
+        self.message = "PermissionDeniedError: {}".format(message)
         self.llm_provider = llm_provider
         self.model = model
         self.litellm_debug_info = litellm_debug_info
@@ -290,7 +290,7 @@ class RateLimitError(openai.RateLimitError):  # type: ignore
         num_retries: Optional[int] = None,
     ):
         self.status_code = 429
-        self.message = "RateLimitErrror: {}".format(message)
+        self.message = "RateLimitError: {}".format(message)
         self.llm_provider = llm_provider
         self.model = model
         self.litellm_debug_info = litellm_debug_info
@@ -355,7 +355,7 @@ class ContextWindowExceededError(BadRequestError):  # type: ignore
         )  # Call the base class constructor with the parameters it needs
 
         # set after, to make it clear the raised error is a context window exceeded error
-        self.message = "ContextWindowExceededErrror: {}".format(self.message)
+        self.message = "ContextWindowExceededError: {}".format(self.message)
 
     def __str__(self):
         _message = self.message
@@ -385,7 +385,7 @@ class RejectedRequestError(BadRequestError):  # type: ignore
         litellm_debug_info: Optional[str] = None,
     ):
         self.status_code = 400
-        self.message = "RejectedRequestErrror: {}".format(message)
+        self.message = "RejectedRequestError: {}".format(message)
         self.model = model
         self.llm_provider = llm_provider
         self.litellm_debug_info = litellm_debug_info
@@ -428,7 +428,7 @@ class ContentPolicyViolationError(BadRequestError):  # type: ignore
         litellm_debug_info: Optional[str] = None,
     ):
         self.status_code = 400
-        self.message = "ContentPolicyViolationErrror: {}".format(message)
+        self.message = "ContentPolicyViolationError: {}".format(message)
         self.model = model
         self.llm_provider = llm_provider
         self.litellm_debug_info = litellm_debug_info
@@ -471,7 +471,7 @@ class ServiceUnavailableError(openai.APIStatusError):  # type: ignore
         num_retries: Optional[int] = None,
     ):
         self.status_code = 503
-        self.message = "ServiceUnavailableErrror: {}".format(message)
+        self.message = "ServiceUnavailableError: {}".format(message)
         self.llm_provider = llm_provider
         self.model = model
         self.litellm_debug_info = litellm_debug_info
@@ -517,7 +517,7 @@ class InternalServerError(openai.InternalServerError):  # type: ignore
         num_retries: Optional[int] = None,
     ):
         self.status_code = 500
-        self.message = "InternalServerErrror: {}".format(message)
+        self.message = "InternalServerError: {}".format(message)
         self.llm_provider = llm_provider
         self.model = model
         self.litellm_debug_info = litellm_debug_info
@@ -565,7 +565,7 @@ class APIError(openai.APIError):  # type: ignore
         num_retries: Optional[int] = None,
     ):
         self.status_code = status_code
-        self.message = "APIErrror: {}".format(message)
+        self.message = "APIError: {}".format(message)
         self.llm_provider = llm_provider
         self.model = model
         self.litellm_debug_info = litellm_debug_info
@@ -604,7 +604,7 @@ class APIConnectionError(openai.APIConnectionError):  # type: ignore
         max_retries: Optional[int] = None,
         num_retries: Optional[int] = None,
     ):
-        self.message = "APIConnectionErrror: {}".format(message)
+        self.message = "APIConnectionError: {}".format(message)
         self.llm_provider = llm_provider
         self.model = model
         self.status_code = 500
@@ -642,7 +642,7 @@ class APIResponseValidationError(openai.APIResponseValidationError):  # type: ig
         max_retries: Optional[int] = None,
         num_retries: Optional[int] = None,
     ):
-        self.message = "APIResponseValidationErrror: {}".format(message)
+        self.message = "APIResponseValidationError: {}".format(message)
         self.llm_provider = llm_provider
         self.model = model
         request = httpx.Request(method="POST", url="https://api.openai.com/v1")
@@ -676,7 +676,7 @@ class JSONSchemaValidationError(APIResponseValidationError):
         self.raw_response = raw_response
         self.schema = schema
         self.model = model
-        message = "JSONSchemaValidationErrror: model={}, returned an invalid response={}, for schema={}.\nAccess raw response with `e.raw_response`".format(
+        message = "JSONSchemaValidationError: model={}, returned an invalid response={}, for schema={}.\nAccess raw response with `e.raw_response`".format(
             model, raw_response, schema
         )
         self.message = message
@@ -702,7 +702,7 @@ class UnsupportedParamsError(BadRequestError):
         num_retries: Optional[int] = None,
     ):
         self.status_code = 400
-        self.message = "UnsupportedParamsErrror: {}".format(message)
+        self.message = "UnsupportedParamsError: {}".format(message)
         self.model = model
         self.llm_provider = llm_provider
         self.litellm_debug_info = litellm_debug_info
