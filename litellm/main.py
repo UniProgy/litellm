@@ -4800,6 +4800,7 @@ def transcription(
     atranscription = kwargs.get("atranscription", False)
     litellm_logging_obj: LiteLLMLoggingObj = kwargs.get("litellm_logging_obj")  # type: ignore
     extra_headers = kwargs.get("extra_headers", None)
+    headers: dict = kwargs.get("headers", {})
     kwargs.pop("tags", [])
     non_default_params = get_non_default_transcription_params(kwargs)
 
@@ -4918,7 +4919,15 @@ def transcription(
             or None  # default - https://github.com/openai/openai-python/blob/284c1799070c723c6a553337134148a7ab088dd8/openai/util.py#L105
         )
         # set API KEY
-        api_key = api_key or litellm.api_key or litellm.openai_key or get_secret("OPENAI_API_KEY")  # type: ignore
+        api_key_header: str = headers.get("x-authorization", None)
+        api_key = (
+            api_key_header.replace("Bearer ", "")
+            if api_key_header
+            else api_key
+            or litellm.api_key
+            or litellm.openai_key
+            or get_secret("OPENAI_API_KEY")
+        )  # type: ignore
         response = openai_audio_transcriptions.audio_transcriptions(
             model=model,
             audio_file=file,
