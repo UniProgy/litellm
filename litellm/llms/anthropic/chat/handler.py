@@ -249,6 +249,29 @@ class AnthropicChatCompletion(BaseLLM):
             response = await async_handler.post(
                 api_base, headers=headers, json=data, timeout=timeout
             )
+        except httpx.HTTPStatusError as e:
+            ## LOGGING
+            logging_obj.post_call(
+                input=messages,
+                api_key=api_key,
+                original_response=str(e),
+                additional_args={"complete_input_dict": data},
+            )
+            error_headers = getattr(e, "headers", None)
+            error_response = getattr(e, "response", None)
+            error_text = str(e)
+            if error_headers is None and error_response:
+                error_headers = getattr(error_response, "headers", None)
+            if error_response and hasattr(error_response, "text"):
+                try:
+                    error_text = await error_response.aread()
+                except:
+                    error_text = str(e)
+            raise AnthropicError(
+                message=error_text,
+                status_code=e.response.status_code,
+                headers=error_headers,
+            )
         except Exception as e:
             ## LOGGING
             logging_obj.post_call(
@@ -442,6 +465,22 @@ class AnthropicChatCompletion(BaseLLM):
                         headers=headers,
                         data=json.dumps(data),
                         timeout=timeout,
+                    )
+                except httpx.HTTPStatusError as e:
+                    error_headers = getattr(e, "headers", None)
+                    error_response = getattr(e, "response", None)
+                    error_text = str(e)
+                    if error_headers is None and error_response:
+                        error_headers = getattr(error_response, "headers", None)
+                    if error_response and hasattr(error_response, "text"):
+                        try:
+                            error_text = error_response.text
+                        except:
+                            error_text = str(e)
+                    raise AnthropicError(
+                        message=error_text,
+                        status_code=e.response.status_code,
+                        headers=error_headers,
                     )
                 except Exception as e:
                     status_code = getattr(e, "status_code", 500)
