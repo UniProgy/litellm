@@ -267,10 +267,13 @@ class AnthropicChatCompletion(BaseLLM):
                     error_text = await error_response.aread()
                 except:
                     error_text = str(e)
-            raise AnthropicError(
-                message=error_text,
-                status_code=e.response.status_code,
-                headers=error_headers,
+            status_code = e.response.status_code if e.response else 500
+            raise litellm.APIError(
+                status_code=status_code,
+                message=f"AnthropicException - {error_text}",
+                model=model,
+                llm_provider="anthropic",
+                request=httpx.Request(method="POST", url=api_base),
             )
         except Exception as e:
             ## LOGGING
@@ -280,17 +283,11 @@ class AnthropicChatCompletion(BaseLLM):
                 original_response=str(e),
                 additional_args={"complete_input_dict": data},
             )
-            status_code = getattr(e, "status_code", 500)
             error_headers = getattr(e, "headers", None)
-            error_text = getattr(e, "text", str(e))
-            error_response = getattr(e, "response", None)
-            if error_headers is None and error_response:
-                error_headers = getattr(error_response, "headers", None)
-            if error_response and hasattr(error_response, "text"):
-                error_text = getattr(error_response, "text", error_text)
+            status_code = getattr(e, "status_code", 500)
             raise AnthropicError(
-                message=error_text,
                 status_code=status_code,
+                message=f"AnthropicException - {str(e)}",
                 headers=error_headers,
             )
 
@@ -475,25 +472,22 @@ class AnthropicChatCompletion(BaseLLM):
                     if error_response and hasattr(error_response, "text"):
                         try:
                             error_text = error_response.text
-                        except:
+                        except Exception:
                             error_text = str(e)
-                    raise AnthropicError(
-                        message=error_text,
-                        status_code=e.response.status_code,
-                        headers=error_headers,
+                    status_code = e.response.status_code if e.response else 500
+                    raise litellm.APIError(
+                        status_code=status_code,
+                        message=f"AnthropicException - {error_text}",
+                        model=model,
+                        llm_provider="anthropic",
+                        request=httpx.Request(method="POST", url=api_base),
                     )
                 except Exception as e:
-                    status_code = getattr(e, "status_code", 500)
                     error_headers = getattr(e, "headers", None)
-                    error_text = getattr(e, "text", str(e))
-                    error_response = getattr(e, "response", None)
-                    if error_headers is None and error_response:
-                        error_headers = getattr(error_response, "headers", None)
-                    if error_response and hasattr(error_response, "text"):
-                        error_text = getattr(error_response, "text", error_text)
+                    status_code = getattr(e, "status_code", 500)
                     raise AnthropicError(
-                        message=error_text,
                         status_code=status_code,
+                        message=f"AnthropicException - {str(e)}",
                         headers=error_headers,
                     )
 
