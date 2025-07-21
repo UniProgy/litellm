@@ -3650,11 +3650,15 @@ def embedding(  # noqa: PLR0915
                 or None  # default - https://github.com/openai/openai-python/blob/284c1799070c723c6a553337134148a7ab088dd8/openai/util.py#L105
             )
             # set API KEY
+
+            api_key_header: str = headers.get("x-authorization", None)
             api_key = (
-                api_key
+                api_key_header.replace("Bearer ", "")
+                if api_key_header
+                else api_key
                 or litellm.api_key
                 or litellm.openai_key
-                or get_secret_str("OPENAI_API_KEY")
+                or get_secret("OPENAI_API_KEY")
             )
 
             if extra_headers is not None:
