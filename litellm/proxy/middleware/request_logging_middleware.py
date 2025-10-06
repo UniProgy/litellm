@@ -5,6 +5,7 @@ from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from litellm._logging import verbose_proxy_logger
+from litellm.proxy.utils import hash_token
 
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
@@ -13,6 +14,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         start_time = time.time()
         
         client_ip = self._get_client_ip(request)
+        api_key_hash = self._extract_and_hash_api_key(request)
         request_size_mb = self._get_request_size(request)
         method = request.method
         path = request.url.path
@@ -24,6 +26,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         
         log_message = (
             f"[REQUEST] IP: {client_ip} | "
+            f"API Key: {api_key_hash} | "
             f"Size: {request_size_mb:.2f} MB | "
             f"Method: {method} | "
             f"Path: {path} | "
@@ -42,6 +45,26 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             return request.client.host
         else:
             return "unknown"
+    
+    def _extract_and_hash_api_key(self, request: Request) -> str:
+        x_auth_header = request.headers.get("x-authorization")
+        
+        if not x_auth_header:
+            return "none"
+        
+        api_key = x_auth_header.strip()
+        
+        if api_key.lower().startswith("bearer "):
+            api_key = api_key[7:]
+        
+        if not api_key:
+            return "none"
+        
+        try:
+            hashed = hash_token(api_key)
+            return hashed[:10]
+        except Exception:
+            return "invalid"
     
     def _get_request_size(self, request: Request) -> float:
         content_length = request.headers.get("content-length")
