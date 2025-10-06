@@ -279,6 +279,7 @@ from litellm.proxy.management_endpoints.ui_sso import (
 from litellm.proxy.management_endpoints.ui_sso import router as ui_sso_router
 from litellm.proxy.management_helpers.audit_logs import create_audit_log_for_update
 from litellm.proxy.middleware.prometheus_auth_middleware import PrometheusAuthMiddleware
+from litellm.proxy.middleware.request_logging_middleware import RequestLoggingMiddleware
 from litellm.proxy.openai_files_endpoints.files_endpoints import (
     router as openai_files_router,
 )
@@ -840,6 +841,7 @@ app.add_middleware(
 )
 
 app.add_middleware(PrometheusAuthMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
 
 swagger_path = os.path.join(current_dir, "swagger")
 router.mount("/swagger", StaticFiles(directory=swagger_path), name="swagger")
