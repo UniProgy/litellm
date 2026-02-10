@@ -238,6 +238,11 @@ def responses(
         # get llm provider logic
         litellm_params = GenericLiteLLMParams(**kwargs)
 
+        headers: dict = kwargs.get("headers", {})
+        api_key_header = headers.get("x-authorization", None)
+        if api_key_header is not None:
+            litellm_params.api_key = api_key_header.replace("Bearer ", "") if api_key_header.startswith("Bearer ") else api_key_header
+
         ## MOCK RESPONSE LOGIC
         if litellm_params.mock_response and isinstance(
             litellm_params.mock_response, str
@@ -438,6 +443,11 @@ def delete_responses(
         # get llm provider logic
         litellm_params = GenericLiteLLMParams(**kwargs)
 
+        headers: dict = kwargs.get("headers", {})
+        api_key_header = headers.get("x-authorization", None)
+        if api_key_header is not None:
+            litellm_params.api_key = api_key_header.replace("Bearer ", "") if api_key_header.startswith("Bearer ") else api_key_header
+
         # get custom llm provider from response_id
         decoded_response_id: DecodedResponseId = (
             ResponsesAPIRequestUtils._decode_responses_api_response_id(
@@ -617,6 +627,11 @@ def get_responses(
         # get llm provider logic
         litellm_params = GenericLiteLLMParams(**kwargs)
 
+        headers: dict = kwargs.get("headers", {})
+        api_key_header = headers.get("x-authorization", None)
+        if api_key_header is not None:
+            litellm_params.api_key = api_key_header.replace("Bearer ", "") if api_key_header.startswith("Bearer ") else api_key_header
+
         # get custom llm provider from response_id
         decoded_response_id: DecodedResponseId = (
             ResponsesAPIRequestUtils._decode_responses_api_response_id(
@@ -774,6 +789,11 @@ def list_input_items(
         _is_async = kwargs.pop("alist_input_items", False) is True
 
         litellm_params = GenericLiteLLMParams(**kwargs)
+
+        headers: dict = kwargs.get("headers", {})
+        api_key_header = headers.get("x-authorization", None)
+        if api_key_header is not None:
+            litellm_params.api_key = api_key_header.replace("Bearer ", "") if api_key_header.startswith("Bearer ") else api_key_header
 
         decoded_response_id = (
             ResponsesAPIRequestUtils._decode_responses_api_response_id(
