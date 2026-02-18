@@ -185,6 +185,7 @@ class LiteLLMResponsesTransformationHandler(CompletionTransformationBridge):
             "model": api_model,
             "input": input_items,
             "litellm_logging_obj": litellm_logging_obj,
+            "headers": headers,
             **litellm_params,
         }
 
