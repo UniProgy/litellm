@@ -592,6 +592,17 @@ def image_edit(
         litellm_call_id: Optional[str] = kwargs.get("litellm_call_id", None)
         _is_async = kwargs.pop("async_call", False) is True
 
+        headers: dict = kwargs.get("headers", {}) or {}
+        if extra_headers:
+            headers.update(extra_headers)
+        api_key_header: Optional[str] = headers.get("x-authorization", None)
+        if api_key_header is not None:
+            kwargs["api_key"] = (
+                api_key_header.replace("Bearer ", "")
+                if api_key_header.startswith("Bearer ")
+                else api_key_header
+            )
+
         # get llm provider logic
         litellm_params = GenericLiteLLMParams(**kwargs)
         model, custom_llm_provider, _, _ = get_llm_provider(
@@ -611,16 +622,7 @@ def image_edit(
             raise ValueError(f"image edit is not supported for {custom_llm_provider}")
 
         local_vars.update(kwargs)
-        
-        # Extract API key from x-authorization header (similar to embeddings endpoint)
-        headers: dict = kwargs.get("headers", {})
-        if extra_headers:
-            headers.update(extra_headers)
-        api_key_header: Optional[str] = headers.get("x-authorization", None)
-        if api_key_header is not None:
-            # Update the api_key in local_vars if x-authorization header is present
-            local_vars["api_key"] = api_key_header.replace("Bearer ", "") if api_key_header.startswith("Bearer ") else api_key_header
-        
+
         # Get ImageEditOptionalRequestParams with only valid parameters
         image_edit_optional_params: ImageEditOptionalRequestParams = (
             ImageEditRequestUtils.get_requested_image_edit_optional_param(local_vars)
