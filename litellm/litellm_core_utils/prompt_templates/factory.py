@@ -1150,6 +1150,20 @@ def convert_to_gemini_tool_call_result(
     return _part
 
 
+def _sanitize_anthropic_tool_use_id(tool_use_id: str) -> str:
+    """
+    Sanitize tool_use_id to match Anthropic's required pattern: ^[a-zA-Z0-9_-]+$
+
+    Anthropic requires tool_use_id to only contain alphanumeric characters, underscores, and hyphens.
+    This function replaces any invalid characters with underscores. Applied deterministically to both
+    tool_use ids and tool_result tool_use_ids so paired ids stay consistent.
+    """
+    sanitized = re.sub(r"[^a-zA-Z0-9_-]", "_", tool_use_id)
+    if not sanitized:
+        sanitized = "tool_use_id"
+    return sanitized
+
+
 def convert_to_anthropic_tool_result(
     message: Union[ChatCompletionToolMessage, ChatCompletionFunctionMessage],
 ) -> AnthropicMessagesToolResultParam:
@@ -1230,7 +1244,9 @@ def convert_to_anthropic_tool_result(
     cache_control = message.get("cache_control", None)
     if message["role"] == "tool":
         tool_message: ChatCompletionToolMessage = message
-        tool_call_id: str = tool_message["tool_call_id"]
+        tool_call_id: str = _sanitize_anthropic_tool_use_id(
+            tool_message["tool_call_id"]
+        )
 
         # We can't determine from openai message format whether it's a successful or
         # error call result so default to the successful result template
@@ -1240,7 +1256,9 @@ def convert_to_anthropic_tool_result(
 
     if message["role"] == "function":
         function_message: ChatCompletionFunctionMessage = message
-        tool_call_id = function_message.get("tool_call_id") or str(uuid.uuid4())
+        tool_call_id = _sanitize_anthropic_tool_use_id(
+            function_message.get("tool_call_id") or str(uuid.uuid4())
+        )
         anthropic_tool_result = AnthropicMessagesToolResultParam(
             type="tool_result", tool_use_id=tool_call_id, content=anthropic_content
         )
@@ -1318,7 +1336,9 @@ def convert_to_anthropic_tool_invoke(
 
         _anthropic_tool_use_param = AnthropicMessagesToolUseParam(
             type="tool_use",
-            id=cast(str, get_attribute_or_key(tool, "id")),
+            id=_sanitize_anthropic_tool_use_id(
+                cast(str, get_attribute_or_key(tool, "id"))
+            ),
             name=cast(
                 str,
                 get_attribute_or_key(get_attribute_or_key(tool, "function"), "name"),
