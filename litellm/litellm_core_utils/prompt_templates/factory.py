@@ -39,6 +39,9 @@ from .common_utils import convert_content_list_to_str, is_non_content_values_set
 from .image_handling import convert_url_to_base64
 
 
+MISSING_TOOL_NAME_PLACEHOLDER = "unknown_tool"
+
+
 def default_pt(messages):
     return " ".join(message["content"] for message in messages)
 
@@ -1275,6 +1278,11 @@ def convert_function_to_anthropic_tool_invoke(
 ) -> List[AnthropicMessagesToolUseParam]:
     try:
         _name = get_attribute_or_key(function_call, "name") or ""
+        if not _name:
+            verbose_logger.warning(
+                "Empty tool name in assistant function_call; substituting placeholder to avoid Anthropic 400."
+            )
+            _name = MISSING_TOOL_NAME_PLACEHOLDER
         _arguments = get_attribute_or_key(function_call, "arguments")
         anthropic_tool_invoke = [
             AnthropicMessagesToolUseParam(
@@ -1334,15 +1342,23 @@ def convert_to_anthropic_tool_invoke(
         if not get_attribute_or_key(tool, "type") == "function":
             continue
 
+        _tool_name = cast(
+            str,
+            get_attribute_or_key(get_attribute_or_key(tool, "function"), "name"),
+        )
+        if not _tool_name:
+            verbose_logger.warning(
+                "Empty tool name in assistant tool_call id=%s; substituting placeholder to avoid Anthropic 400.",
+                get_attribute_or_key(tool, "id"),
+            )
+            _tool_name = MISSING_TOOL_NAME_PLACEHOLDER
+
         _anthropic_tool_use_param = AnthropicMessagesToolUseParam(
             type="tool_use",
             id=_sanitize_anthropic_tool_use_id(
                 cast(str, get_attribute_or_key(tool, "id"))
             ),
-            name=cast(
-                str,
-                get_attribute_or_key(get_attribute_or_key(tool, "function"), "name"),
-            ),
+            name=_tool_name,
             input=json.loads(
                 get_attribute_or_key(
                     get_attribute_or_key(tool, "function"), "arguments"
